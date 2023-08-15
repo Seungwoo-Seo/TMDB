@@ -73,23 +73,15 @@ extension MainViewController: UITableViewDataSource {
             for: indexPath
         ) as? MainTableViewCell
 
+        cell?.pushButtontag = indexPath.row
+        cell?.delegate = self
+
         let trending = trendingList[indexPath.row]
         cell?.bind(trending)
 
         return cell ?? UITableViewCell()
     }
 
-}
-
-// MARK: - UITableViewDelegate
-extension MainViewController: UITableViewDelegate {
-
-    func tableView(
-        _ tableView: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
-
-    }
 }
 
 // MARK: - UITableViewDataSourcePrefetching
@@ -113,6 +105,15 @@ extension MainViewController: UITableViewDataSourcePrefetching {
 
 }
 
+// MARK: - MainTableViewCellDelegate
+extension MainViewController: MainTableViewCellDelegate {
+    
+    func didTapPushButton(_ tag: Int) {
+        pushToDetailViewController(with: tag)
+    }
+
+}
+
 // MARK: - UI: viewDidLoad
 extension MainViewController: UI_ViewControllerConvention {
 
@@ -122,6 +123,9 @@ extension MainViewController: UI_ViewControllerConvention {
     }
 
     func configureNavigationBar() {
+        navigationController?.navigationBar.tintColor = .black
+        navigationItem.backButtonTitle = ""
+
         // leftBarButtonItem
         leftBarButtonItem.title = ""
         leftBarButtonItem.image = UIImage(
@@ -137,7 +141,6 @@ extension MainViewController: UI_ViewControllerConvention {
 
     func configureTableViews() {
         tableView.dataSource = self
-        tableView.delegate = self
         tableView.prefetchDataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
@@ -154,3 +157,21 @@ extension MainViewController: UI_ViewControllerConvention {
 
 }
 
+// MARK: - 화면 전환
+private extension MainViewController {
+
+    func pushToDetailViewController(with tag: Int) {
+        let vc = storyboard?.instantiateViewController(
+            withIdentifier: DetailViewController.identifier
+        ) as! DetailViewController
+
+        let treding = trendingList[tag]
+        vc.trending = treding
+
+        navigationController?.pushViewController(
+            vc,
+            animated: true
+        )
+    }
+
+}

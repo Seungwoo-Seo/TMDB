@@ -8,6 +8,10 @@
 import Kingfisher
 import UIKit
 
+protocol MainTableViewCellDelegate: AnyObject {
+    func didTapPushButton(_ tag: Int)
+}
+
 final class MainTableViewCell: UITableViewCell {
     // MARK: - View
     @IBOutlet weak var releaseDataLabel: UILabel!
@@ -27,6 +31,12 @@ final class MainTableViewCell: UITableViewCell {
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var detailImageView: UIImageView!
 
+    // MARK: - Data
+    var pushButtontag: Int?
+
+    // MARK: - Delegate
+    weak var delegate: MainTableViewCellDelegate?
+
     // MARK: - Life Cycle
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -36,7 +46,7 @@ final class MainTableViewCell: UITableViewCell {
 
     func bind(_ trending: Trending) {
         releaseDataLabel.text = trending.releaseDate
-        genreLabel.text = "#"
+        genreLabel.text = "#"//trending.genreString
         posterImageView.kf.setImage(
             with: trending.posterURL,
             placeholder: UIImage(
@@ -54,7 +64,8 @@ final class MainTableViewCell: UITableViewCell {
     }
 
     @IBAction func didTapPushButton(_ sender: UIButton) {
-        print("push")
+        guard let tag = pushButtontag else {return}
+        delegate?.didTapPushButton(tag)
     }
 
 }

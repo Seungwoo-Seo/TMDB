@@ -23,7 +23,21 @@ final class NetworkingManager {
             page: page
         ) { container in
             guard let container else {return}
-            completion(container.results)
+            completion(container.trendingList)
+        }
+    }
+
+    func castAPIResponse(
+        id: Int,
+        completion: @escaping ([Cast]) -> ()
+    ) {
+        CreditsAPI.request(
+            id: id
+        ) { container in
+            guard let container else {
+                print("실패")
+                return}
+            completion(container.castList)
         }
     }
 
