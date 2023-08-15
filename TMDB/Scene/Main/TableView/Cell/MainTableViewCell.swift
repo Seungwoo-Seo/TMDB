@@ -5,6 +5,7 @@
 //  Created by 서승우 on 2023/08/15.
 //
 
+import Kingfisher
 import UIKit
 
 final class MainTableViewCell: UITableViewCell {
@@ -16,8 +17,8 @@ final class MainTableViewCell: UITableViewCell {
 
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var clipButton: UIButton!
-    @IBOutlet weak var ratingTitleLabel: UILabel!
-    @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var ratingTitleLabel: PaddingLabel!
+    @IBOutlet weak var ratingLabel: PaddingLabel!
 
     @IBOutlet weak var infoContainerView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -33,16 +34,44 @@ final class MainTableViewCell: UITableViewCell {
         configureHierarchy()
     }
 
+    func bind(_ trending: Trending) {
+        releaseDataLabel.text = trending.releaseDate
+        genreLabel.text = "#"
+        posterImageView.kf.setImage(
+            with: trending.posterURL,
+            placeholder: UIImage(
+                systemName: "rectangle.on.rectangle"
+            )
+        )
+        ratingLabel.text = trending.ratingString
+        titleLabel.text = trending.title
+        overviewLabel.text = trending.overview
+    }
+
+    // MARK: - Event
+    @IBAction func didTapClipButton(_ sender: UIButton) {
+        print("clip")
+    }
+
+    @IBAction func didTapPushButton(_ sender: UIButton) {
+        print("push")
+    }
+
 }
 
 // MARK: - UI: awakeFromNib
 extension MainTableViewCell: UI_CellConvention {
 
     func configureHierarchy() {
+        configureCell()
         configureLabels()
         configureViews()
         configureButtons()
         configureImageViews()
+    }
+
+    func configureCell() {
+        selectionStyle = .none
     }
 
     func configureLabels() {
@@ -55,17 +84,23 @@ extension MainTableViewCell: UI_CellConvention {
         genreLabel.textColor = .label
 
         // ratingTitleLabel
-        ratingTitleLabel.font = .systemFont(ofSize: 15)
+        ratingTitleLabel.font = .systemFont(ofSize: 13)
+        ratingTitleLabel.textAlignment = .center
         ratingTitleLabel.textColor = .white
         ratingTitleLabel.backgroundColor = .systemIndigo
+        ratingTitleLabel.text = "평점"
 
         // ratingLabel
-        ratingLabel.font = .systemFont(ofSize: 15)
+        ratingLabel.font = .systemFont(ofSize: 13)
+        ratingLabel.textAlignment = .center
         ratingLabel.textColor = .label
         ratingLabel.backgroundColor = .white
 
         // titleLabel
-        titleLabel.font = .systemFont(ofSize: 20)
+        titleLabel.font = .systemFont(
+            ofSize: 20,
+            weight: .medium
+        )
         titleLabel.textColor = .label
 
         // overviewLabel
@@ -73,8 +108,9 @@ extension MainTableViewCell: UI_CellConvention {
         overviewLabel.textColor = .secondaryLabel
 
         // detailLabel
-        detailLabel.font = .systemFont(ofSize: 15)
+        detailLabel.font = .systemFont(ofSize: 13)
         detailLabel.textColor = .label
+        detailLabel.text = "자세히 보기"
     }
 
     func configureViews() {
@@ -82,11 +118,7 @@ extension MainTableViewCell: UI_CellConvention {
         containerView.backgroundColor = .clear
         containerView.layer.shadowColor = UIColor.gray.cgColor
         containerView.layer.shadowOpacity = 1
-        containerView.layer.shadowRadius = 1
-        containerView.layer.shadowOffset = CGSize(
-            width: 10,
-            height: 10
-        )
+        containerView.layer.shadowRadius = 8
 
         // infoContainerView
         infoContainerView.layer.cornerRadius = 8
@@ -114,9 +146,17 @@ extension MainTableViewCell: UI_CellConvention {
     func configureImageViews() {
         // posterImageView
         posterImageView.contentMode = .scaleToFill
+        posterImageView.tintColor = .systemIndigo
+        posterImageView.layer.cornerRadius = 8
+        posterImageView.layer.maskedCorners = [
+            .layerMinXMinYCorner,
+            .layerMaxXMinYCorner
+        ]
+        posterImageView.layer.masksToBounds = true
 
         // detailImageView
         detailImageView.contentMode = .scaleAspectFit
+        detailImageView.tintColor = .label
         detailImageView.image = UIImage(
             systemName: "chevron.right"
         )

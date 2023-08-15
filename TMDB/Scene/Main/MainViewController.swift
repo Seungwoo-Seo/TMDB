@@ -13,11 +13,32 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var rightBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
 
+    // MARK: - Data
+    private var trendingList: [Trending] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    private var currentPage = 1
+
+    // MARK: - Manager
+    private let shared = NetworkingManager.shared
+
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureHierarchy()
+        bind()
+    }
+
+    // MARK: - Bind
+    func bind() {
+        shared.trendingAPIResponse(
+            page: currentPage
+        ){ [weak self] (results) in
+            self?.trendingList = results
+        }
     }
 
     // MARK: - Event
@@ -40,7 +61,7 @@ extension MainViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return 0
+        return trendingList.count
     }
 
     func tableView(
@@ -51,6 +72,9 @@ extension MainViewController: UITableViewDataSource {
             withIdentifier: MainTableViewCell.identifier,
             for: indexPath
         ) as? MainTableViewCell
+
+        let trending = trendingList[indexPath.row]
+        cell?.bind(trending)
 
         return cell ?? UITableViewCell()
     }
@@ -66,6 +90,27 @@ extension MainViewController: UITableViewDelegate {
     ) {
 
     }
+}
+
+// MARK: - UITableViewDataSourcePrefetching
+extension MainViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(
+        _ tableView: UITableView,
+        prefetchRowsAt indexPaths: [IndexPath]
+    ) {
+        for indexPath in indexPaths {
+            if indexPath.row == trendingList.count - 1 && currentPage < 500 {
+                currentPage += 1
+                shared.trendingAPIResponse(
+                    page: currentPage
+                ) { [weak self] (results) in
+                    self?.trendingList += results
+                }
+            }
+        }
+    }
+
 }
 
 // MARK: - UI: viewDidLoad
@@ -93,7 +138,9 @@ extension MainViewController: UI_ViewControllerConvention {
     func configureTableViews() {
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.prefetchDataSource = self
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
 
         let nib = UINib(
             nibName: MainTableViewCell.identifier,

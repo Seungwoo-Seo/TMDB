@@ -8,6 +8,8 @@
 import Foundation
 
 /// Storyboard로 UI를 구성할 때 Base(최상위) 컨벤션
+///
+/// 컨벤션이니까 파라미터는 자유롭게 커스텀해서 사용가능 - 흠..
 @objc
 protocol UI_StoryboardConvention {
     /// UI 만드는 방식에 따라 변동
