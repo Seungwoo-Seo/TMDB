@@ -12,9 +12,6 @@ final class NetworkingManager {
 
     private init() {}
 
-    // 이름 후보?//?///??/?
-    // 1. response
-    // 2. parse
     func trendingAPIResponse(
         page: Int,
         completion: @escaping ([Trending]) -> ()
@@ -34,9 +31,7 @@ final class NetworkingManager {
         CreditsAPI.request(
             id: id
         ) { container in
-            guard let container else {
-                print("실패")
-                return}
+            guard let container else {return}
             completion(container.castList)
         }
     }

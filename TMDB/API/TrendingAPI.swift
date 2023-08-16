@@ -50,13 +50,3 @@ struct TrendingAPI {
     }
 
 }
-
-//enum API {
-//    case trending
-//
-//    func request(
-//        completion: @escaping (TrendingContainer?) -> ()
-//    ) {}
-//}
-
-

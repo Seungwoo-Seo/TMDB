@@ -46,14 +46,14 @@ final class MainTableViewCell: UITableViewCell {
 
     func bind(_ trending: Trending) {
         releaseDataLabel.text = trending.releaseDate
-        genreLabel.text = "#"//trending.genreString
+        genreLabel.text = trending.genresStringValue
         posterImageView.kf.setImage(
             with: trending.posterURL,
             placeholder: UIImage(
                 systemName: "rectangle.on.rectangle"
             )
         )
-        ratingLabel.text = trending.ratingString
+        ratingLabel.text = trending.ratingStringValue
         titleLabel.text = trending.title
         overviewLabel.text = trending.overview
     }
