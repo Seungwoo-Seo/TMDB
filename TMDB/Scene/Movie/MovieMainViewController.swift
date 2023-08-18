@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  MovieMainViewController.swift
 //  TMDB
 //
 //  Created by 서승우 on 2023/08/15.
@@ -7,14 +7,14 @@
 
 import UIKit
 
-final class MainViewController: UIViewController {
+final class MovieMainViewController: UIViewController {
     // MARK: - View
     @IBOutlet weak var leftBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var rightBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
 
     // MARK: - Data
-    private var trendingList: [Trending] = [] {
+    private var movieList: [Movie] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -34,10 +34,10 @@ final class MainViewController: UIViewController {
 
     // MARK: - Bind
     func bind() {
-        shared.trendingAPIResponse(
+        shared.responseTrendingAPI(
             page: currentPage
-        ){ [weak self] (results) in
-            self?.trendingList = results
+        ) { [weak self] (movieList) in
+            self?.movieList = movieList
         }
     }
 
@@ -55,13 +55,13 @@ final class MainViewController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension MainViewController: UITableViewDataSource {
+extension MovieMainViewController: UITableViewDataSource {
 
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return trendingList.count
+        return movieList.count
     }
 
     func tableView(
@@ -76,7 +76,7 @@ extension MainViewController: UITableViewDataSource {
         cell?.pushButtontag = indexPath.row
         cell?.delegate = self
 
-        let trending = trendingList[indexPath.row]
+        let trending = movieList[indexPath.row]
         cell?.bind(trending)
 
         return cell ?? UITableViewCell()
@@ -85,19 +85,19 @@ extension MainViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDataSourcePrefetching
-extension MainViewController: UITableViewDataSourcePrefetching {
+extension MovieMainViewController: UITableViewDataSourcePrefetching {
 
     func tableView(
         _ tableView: UITableView,
         prefetchRowsAt indexPaths: [IndexPath]
     ) {
         for indexPath in indexPaths {
-            if indexPath.row == trendingList.count - 1 && currentPage < 500 {
+            if indexPath.row == movieList.count - 1 && currentPage < 500 {
                 currentPage += 1
-                shared.trendingAPIResponse(
+                shared.responseTrendingAPI(
                     page: currentPage
-                ) { [weak self] (results) in
-                    self?.trendingList += results
+                ) { [weak self] (movieList) in
+                    self?.movieList += movieList
                 }
             }
         }
@@ -106,7 +106,7 @@ extension MainViewController: UITableViewDataSourcePrefetching {
 }
 
 // MARK: - MainTableViewCellDelegate
-extension MainViewController: MainTableViewCellDelegate {
+extension MovieMainViewController: MainTableViewCellDelegate {
     
     func didTapPushButton(_ tag: Int) {
         pushToDetailViewController(with: tag)
@@ -115,7 +115,7 @@ extension MainViewController: MainTableViewCellDelegate {
 }
 
 // MARK: - UI: viewDidLoad
-extension MainViewController: UI_ViewControllerConvention {
+extension MovieMainViewController: UI_ViewControllerConvention {
 
     func configureHierarchy() {
         configureNavigationBar()
@@ -158,14 +158,14 @@ extension MainViewController: UI_ViewControllerConvention {
 }
 
 // MARK: - 화면 전환
-private extension MainViewController {
+private extension MovieMainViewController {
 
     func pushToDetailViewController(with tag: Int) {
         let vc = storyboard?.instantiateViewController(
-            withIdentifier: DetailViewController.identifier
-        ) as! DetailViewController
+            withIdentifier: MovieDetailViewController.identifier
+        ) as! MovieDetailViewController
 
-        let treding = trendingList[tag]
+        let treding = movieList[tag]
         vc.trending = treding
 
         navigationController?.pushViewController(

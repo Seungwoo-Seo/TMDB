@@ -1,5 +1,5 @@
 //
-//  DetailViewController.swift
+//  MovieDetailViewController.swift
 //  TMDB
 //
 //  Created by 서승우 on 2023/08/16.
@@ -8,7 +8,7 @@
 import Kingfisher
 import UIKit
 
-final class DetailViewController: UIViewController {
+final class MovieDetailViewController: UIViewController {
     // MARK: - View
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: UIView!
@@ -22,7 +22,7 @@ final class DetailViewController: UIViewController {
             tableView.reloadData()
         }
     }
-    var trending: Trending?
+    var trending: Movie?
 
     // MARK: - Manager
     private let shared = NetworkingManager.shared
@@ -57,7 +57,7 @@ final class DetailViewController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension DetailViewController: UITableViewDataSource {
+extension MovieDetailViewController: UITableViewDataSource {
 
     func numberOfSections(
         in tableView: UITableView
@@ -121,7 +121,7 @@ extension DetailViewController: UITableViewDataSource {
 }
 
 // MARK: - DetailTableViewOverviewCellDelegate
-extension DetailViewController: DetailTableViewOverviewCellDelegate {
+extension MovieDetailViewController: DetailTableViewOverviewCellDelegate {
 
     func didTapExpandButton(
         _ sender: UIButton,
@@ -141,7 +141,7 @@ extension DetailViewController: DetailTableViewOverviewCellDelegate {
 }
 
 // MARK: - UI: viewDidLoad
-extension DetailViewController: UI_ViewControllerConvention {
+extension MovieDetailViewController: UI_ViewControllerConvention {
 
     func configureHierarchy() {
         configureNavigationBar()

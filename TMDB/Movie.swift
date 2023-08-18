@@ -7,40 +7,40 @@
 
 import Foundation
 
-// MARK: - TrendingContainer
-struct TrendingContainer: Decodable {
-    let trendingList: [Trending]
+// MARK: - MovieContainer
+struct MovieContainer: Decodable {
+    let movieList: [Movie]
 
     enum CodingKeys: String, CodingKey {
-        case trendingList = "results"
+        case movieList = "results"
     }
 }
 
-// MARK: - Trending
-struct Trending: Decodable {
+// MARK: - Movie
+struct Movie: Decodable {
     let id: Int
     let backdropPath: String
     let title: String
     let overview: String
     let posterPath: String
-    let genres: [Genre]
+    let genreList: [Genre]
     let releaseDate: String
     let rating: Double
 
-    private let baseURL = "https://image.tmdb.org/t/p/original"
+    private let imageBaseURL = "https://image.tmdb.org/t/p/original"
 
     var backdropURL: URL? {
-        return URL(string: baseURL + backdropPath)
+        return URL(string: imageBaseURL + backdropPath)
     }
 
     var posterURL: URL? {
-        return URL(string: baseURL + posterPath)
+        return URL(string: imageBaseURL + posterPath)
     }
 
     var genresStringValue: String {
         var stringValue = ""
 
-        for genre in genres {
+        for genre in genreList {
             stringValue += "#\(genre.stringValue)"
         }
 
@@ -57,7 +57,7 @@ struct Trending: Decodable {
         case title
         case overview
         case posterPath = "poster_path"
-        case genres = "genre_ids"
+        case genreList = "genre_ids"
         case releaseDate = "release_date"
         case rating = "vote_average"
     }

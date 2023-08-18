@@ -44,7 +44,7 @@ final class MainTableViewCell: UITableViewCell {
         configureHierarchy()
     }
 
-    func bind(_ trending: Trending) {
+    func bind(_ trending: Movie) {
         releaseDataLabel.text = trending.releaseDate
         genreLabel.text = trending.genresStringValue
         posterImageView.kf.setImage(

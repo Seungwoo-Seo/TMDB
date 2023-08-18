@@ -30,7 +30,7 @@ final class DetailTableViewOverviewCell: UITableViewCell {
     }
 
     // MARK: - Bind
-    func bind(_ trending: Trending) {
+    func bind(_ trending: Movie) {
         overviewLabel.text = trending.overview
     }
 
