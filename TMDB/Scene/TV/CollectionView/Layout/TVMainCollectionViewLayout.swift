@@ -38,12 +38,28 @@ private extension TVMainCollectionViewLayout {
         return layout
     }
 
+    func horizontalListHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(50)
+        )
+
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+
+        return header
+    }
+
     func horizontalList(
         width: CGFloat = 0.3,
         height: CGFloat = 0.2
     ) -> NSCollectionLayoutSection {
-        let contentInset: CGFloat = 8.0
+        let contentInset: CGFloat = 4.0
 
+        // itme
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: .fractionalHeight(1)
@@ -52,7 +68,7 @@ private extension TVMainCollectionViewLayout {
             layoutSize: itemSize
         )
 
-        // Group
+        // group
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(width),
             heightDimension: .fractionalHeight(height)
@@ -63,26 +79,30 @@ private extension TVMainCollectionViewLayout {
             count: 1
         )
         group.contentInsets = NSDirectionalEdgeInsets(
-            top: contentInset,
+            top: 0,
             leading: contentInset,
-            bottom: contentInset,
+            bottom: 0,
             trailing: contentInset
         )
 
-        // Section
+        // section
         let section = NSCollectionLayoutSection(
             group: group
         )
         section.orthogonalScrollingBehavior = .continuous
         section.contentInsets = NSDirectionalEdgeInsets(
-            top: contentInset,
+            top: 0,
             leading: contentInset,
-            bottom: contentInset,
+            bottom: 0,
             trailing: contentInset
         )
 
+        let header = horizontalListHeader()
+        section.boundarySupplementaryItems = [
+            header
+        ]
+
         return section
     }
-
 
 }

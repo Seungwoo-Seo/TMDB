@@ -35,6 +35,7 @@ protocol UI_StoryboardConvention {
     @objc optional func configureButtons()
     @objc optional func configureTextFields()
     @objc optional func configureStackViews()
+    @objc optional func configureSegmentedControls()
 }
 
 /// UIViewController의 UI 구성 컨벤션
@@ -55,4 +56,9 @@ protocol UI_CellConvention: UI_StoryboardConvention {
     // MARK: 복수 불가
     @objc optional func configureCell()
     @objc optional func configureContentView()
+}
+
+/// UIViewConvention에선 RootView가 View 본인
+@objc
+protocol UI_ViewConvention: UI_StoryboardConvention {
 }

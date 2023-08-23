@@ -19,18 +19,27 @@
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fEO-Ls-WXy">
                         <rect key="frame" x="0.0" y="0.0" width="305" height="284"/>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xni-xf-j55">
+                        <rect key="frame" x="8" y="263.66666666666669" width="42" height="20.333333333333314"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="fEO-Ls-WXy" secondAttribute="bottom" id="3B2-RF-MNG"/>
+                <constraint firstItem="xni-xf-j55" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="5qT-wM-YPt"/>
                 <constraint firstAttribute="trailing" secondItem="fEO-Ls-WXy" secondAttribute="trailing" id="ZVp-tb-6Mm"/>
                 <constraint firstItem="fEO-Ls-WXy" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="eeO-1G-tCs"/>
+                <constraint firstAttribute="bottom" secondItem="xni-xf-j55" secondAttribute="bottom" id="jXm-SV-zmi"/>
                 <constraint firstItem="fEO-Ls-WXy" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="nt4-0F-Hiw"/>
             </constraints>
             <size key="customSize" width="305" height="284"/>
             <connections>
                 <outlet property="posterImageView" destination="fEO-Ls-WXy" id="4dN-WW-R6C"/>
+                <outlet property="rankingLabel" destination="xni-xf-j55" id="Eyg-Wc-Kox"/>
             </connections>
             <point key="canvasLocation" x="153.43511450381678" y="69.718309859154928"/>
         </collectionViewCell>

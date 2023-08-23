@@ -55,7 +55,7 @@ struct TrendingAPI {
 
     static func requestTV(
         page: Int,
-        success: @escaping (TVContainer) -> (),
+        success: @escaping (TVSeriesContainer) -> (),
         failure: @escaping (Error) -> ()
     ) {
         var components = URLComponents()
@@ -86,7 +86,7 @@ struct TrendingAPI {
             )
             .validate()
             .responseDecodable(
-                of: TVContainer.self
+                of: TVSeriesContainer.self
             ) { response in
                 switch response.result {
                 case .success(let container):
