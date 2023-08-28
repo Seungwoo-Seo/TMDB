@@ -5,11 +5,31 @@
 //  Created by 서승우 on 2023/08/17.
 //
 
+import SnapKit
 import UIKit
 
 final class TVMainViewController: UIViewController {
     // MARK: - View
-    @IBOutlet weak var collectionView: UICollectionView!
+    private lazy var collectionView = {
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: TVMainCollectionViewLayout.compositional.layout
+        )
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .clear
+        collectionView.register(
+            TVMainCollectionViewCell.self,
+            forCellWithReuseIdentifier: TVMainCollectionViewCell.identifier
+        )
+        collectionView.register(
+            TVMainCollectionReusableViewHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TVMainCollectionReusableViewHeader.identifier
+        )
+
+        return collectionView
+    }()
 
     // MARK: - Data
     var airingTodayList: [TVSeries] = []
@@ -26,7 +46,8 @@ final class TVMainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
         bind()
     }
 
@@ -146,61 +167,49 @@ extension TVMainViewController: UICollectionViewDelegate {
             tv = topRatedList[indexPath.item]
         }
 
-        pushToTVDetailViewController(with: tv)
-    }
-
-}
-
-// MARK: - UI: viewDidLoad
-extension TVMainViewController: UI_ViewControllerConvention {
-
-    func configureHierarchy() {
-        configureCollectionViews()
-    }
-
-    func configureCollectionViews() {
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.collectionViewLayout = TVMainCollectionViewLayout.compositional.layout
-
-        // Cell
-        let cellNib = UINib(
-            nibName: TVMainCollectionViewCell.identifier,
-            bundle: nil
-        )
-        collectionView.register(
-            cellNib,
-            forCellWithReuseIdentifier: TVMainCollectionViewCell.identifier
-        )
-
-        // header
-        let headerNib = UINib(
-            nibName: TVMainCollectionReusableViewHeader.identifier,
-            bundle: nil
-        )
-        collectionView.register(
-            headerNib,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: TVMainCollectionReusableViewHeader.identifier
-        )
-    }
-
-}
-
-// MARK: - 화면 전환
-private extension TVMainViewController {
-
-    func pushToTVDetailViewController(with tv: TVSeries) {
-        let vc = storyboard?.instantiateViewController(
-            withIdentifier: TVDetailViewController.identifier
-        ) as! TVDetailViewController
-
+        let vc = TVDetailViewController()
         vc.tv = tv
 
-        navigationController?.pushViewController(
-            vc,
-            animated: true
+        transition(
+            viewController: vc,
+            style: .presentToFullScreen
         )
+    }
+
+}
+
+// MARK: - UI
+extension TVMainViewController {
+
+    func initalAttributes() {
+        view.backgroundColor = .black
+    }
+
+    func initalHierarchy() {
+        view.addSubview(collectionView)
+
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+
+}
+
+extension TVMainViewController {
+
+    enum TransitionStyle {
+        case presentToFullScreen
+    }
+
+    func transition<T: UIViewController>(
+        viewController: T,
+        style: TransitionStyle
+    ) {
+        switch style {
+        case .presentToFullScreen:
+            viewController.modalPresentationStyle = .fullScreen
+            present(viewController, animated: true)
+        }
     }
 
 }

@@ -6,15 +6,34 @@
 //
 
 import Kingfisher
+import SnapKit
 import UIKit
 
 final class MovieDetailViewController: UIViewController {
     // MARK: - View
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var tableHeaderView: UIView!
-    @IBOutlet weak var backdropImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var posterImageView: UIImageView!
+    private lazy var tableView = {
+        let tableView = UITableView()
+        tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.backgroundColor = .clear
+        tableView.sectionHeaderHeight = 32
+        tableView.sectionFooterHeight = 32
+        tableView.register(
+            DetailTableViewOverviewCell.self,
+            forCellReuseIdentifier: DetailTableViewOverviewCell.identifier
+        )
+        tableView.register(
+            DetailTableViewCastCell.self,
+            forCellReuseIdentifier: DetailTableViewCastCell.identifier
+        )
+        tableView.tableHeaderView = tableHeaderView
+
+        return tableView
+    }()
+    private lazy var tableHeaderView = {
+        let view = MovieDetailTableViewHeader(frame: .zero)
+        return view
+    }()
 
     // MARK: - Data
     private var castList: [Cast] = [] {
@@ -31,7 +50,8 @@ final class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
         bind()
     }
 
@@ -44,16 +64,15 @@ final class MovieDetailViewController: UIViewController {
             self?.castList += results
         }
 
-        backdropImageView.kf.setImage(
+        tableHeaderView.backdropImageView.kf.setImage(
             with: trending.backdropURL
         )
-        titleLabel.text = trending.title
-        posterImageView.kf.setImage(
+        tableHeaderView.titleLabel.text = trending.title
+        tableHeaderView.posterImageView.kf.setImage(
             with: trending.posterURL
         )
     }
 
-    // MARK: Event
 }
 
 // MARK: - UITableViewDataSource
@@ -140,58 +159,27 @@ extension MovieDetailViewController: DetailTableViewOverviewCellDelegate {
 
 }
 
-// MARK: - UI: viewDidLoad
-extension MovieDetailViewController: UI_ViewControllerConvention {
+// MARK: - UI
+extension MovieDetailViewController {
 
-    func configureHierarchy() {
-        configureNavigationBar()
-        configureTableViews()
-        configureImageViews()
-        configureLabels()
-    }
-
-    func configureNavigationBar() {
+    func initalAttributes() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "출연/제작"
+        view.backgroundColor = .black
     }
 
-    func configureTableViews() {
-        tableView.dataSource = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.sectionHeaderHeight = 32
-        tableView.sectionFooterHeight = 32
-        tableHeaderView.frame = .init(x: 0, y: 0, width: tableView.bounds.width, height: 200)
+    func initalHierarchy() {
+        view.addSubview(tableView)
 
-        let overViewCellNib = UINib(
-            nibName: DetailTableViewOverviewCell.identifier,
-            bundle: nil
-        )
-        tableView.register(
-            overViewCellNib,
-            forCellReuseIdentifier: DetailTableViewOverviewCell.identifier
-        )
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
 
-        let castCellNib = UINib(
-            nibName: DetailTableViewCastCell.identifier,
-            bundle: nil
-        )
-        tableView.register(
-            castCellNib,
-            forCellReuseIdentifier: DetailTableViewCastCell.identifier
-        )
-    }
-
-    func configureImageViews() {
-        // backdropImageView
-        backdropImageView.contentMode = .scaleToFill
-
-        // posterImageView
-        posterImageView.contentMode = .scaleToFill
-    }
-
-    func configureLabels() {
-        // titleLabel
-        titleLabel.font = .systemFont(ofSize: 24, weight: .black)
-        titleLabel.textColor = .white
+        tableHeaderView.snp.makeConstraints { make in
+            make.width.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(200)
+        }
     }
 
 }

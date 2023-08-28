@@ -20,7 +20,7 @@ enum EndPoint: Hashable {
         return String(describing: self)
     }
 
-    var fullPath: String {
+    var url: String {
         let endPoint: String
 
         switch self {
@@ -38,11 +38,12 @@ enum EndPoint: Hashable {
 
         case let .시즌(seriesId, seasonNumber):
             endPoint = "\(seriesId)/season/\(seasonNumber)"
+
         case let .에피소드(seriesId, seasonNumber, episodeNumber):
             endPoint = "\(seriesId)/season/\(seasonNumber)/episode/\(episodeNumber)"
         }
 
-        return baseURL + endPoint + "?"
+        return baseURL + endPoint + "?" + "api_key=\(APIKey.tmdb)&language=ko-KR"
     }
 
     private var baseURL: String {

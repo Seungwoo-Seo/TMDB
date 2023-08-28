@@ -5,6 +5,7 @@
 //  Created by 서승우 on 2023/08/16.
 //
 
+import SnapKit
 import UIKit
 
 protocol DetailTableViewOverviewCellDelegate: AnyObject {
@@ -16,17 +17,69 @@ protocol DetailTableViewOverviewCellDelegate: AnyObject {
 
 final class DetailTableViewOverviewCell: UITableViewCell {
     // MARK: - View
-    @IBOutlet weak var overviewLabel: UILabel!
-    @IBOutlet weak var expandButton: UIButton!
+    let overviewLabel = {
+        let label = UILabel()
+        label.font = .systemFont(
+            ofSize: 15,
+            weight: .medium
+        )
+        label.textColor = .white
+        label.numberOfLines = 2
+        return label
+    }()
+    lazy var expandButton = {
+        var config = UIButton.Configuration.plain()
+        config.title = ""
+        config.image = UIImage(
+            systemName: "chevron.down"
+        )?.withTintColor(
+            .white
+        )
+        config.baseForegroundColor = .white
+
+        let button = UIButton(configuration: config)
+        button.addTarget(
+            self,
+            action: #selector(didTapExpandButton),
+            for: .touchUpInside
+        )
+        button.configurationUpdateHandler = { button in
+            if button.isSelected {
+                button.configuration?.baseForegroundColor = .white
+                button.configuration?.background.backgroundColor = .clear
+                button.configuration?.image = UIImage(
+                    systemName: "chevron.up"
+                )
+            } else {
+                button.configuration?.baseForegroundColor = .white
+                button.configuration?.background.backgroundColor = .clear
+                button.configuration?.image = UIImage(
+                    systemName: "chevron.down"
+                )
+            }
+        }
+        return button
+    }()
 
     // MARK: - Delegate
     weak var delegate: DetailTableViewOverviewCellDelegate?
 
-    // MARK: - Life Cycle
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    // MARK: - Init
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Bind
@@ -34,8 +87,8 @@ final class DetailTableViewOverviewCell: UITableViewCell {
         overviewLabel.text = trending.overview
     }
 
-    // MARK: - Event
-    @IBAction func didTapExpandButton(_ sender: UIButton) {
+    @objc
+    func didTapExpandButton(_ sender: UIButton) {
         delegate?.didTapExpandButton(
             sender,
             overviewLabel: overviewLabel
@@ -44,49 +97,29 @@ final class DetailTableViewOverviewCell: UITableViewCell {
 
 }
 
-// MARK: - UI: awakeFromNib
-extension DetailTableViewOverviewCell: UI_CellConvention {
+// MARK: - UI
+extension DetailTableViewOverviewCell {
 
-    func configureHierarchy() {
-        configureCell()
-        configureLabels()
-        configureButtons()
-    }
-
-    func configureCell() {
+    func initalAttributes() {
         selectionStyle = .none
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 
-    func configureLabels() {
-        overviewLabel.font = .systemFont(
-            ofSize: 15,
-            weight: .medium
-        )
-        overviewLabel.textColor = .label
-        overviewLabel.numberOfLines = 2
-    }
+    func initalHierarchy() {
+        [
+            overviewLabel,
+            expandButton
+        ].forEach { contentView.addSubview($0) }
 
-    func configureButtons() {
-        var config = UIButton.Configuration.plain()
-        config.title = ""
-        config.image = UIImage(systemName: "chevron.down")
-        config.baseForegroundColor = .label
+        overviewLabel.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalToSuperview().inset(16)
+        }
 
-        expandButton.configuration = config
-        expandButton.configurationUpdateHandler = { button in
-            if button.isSelected {
-                button.configuration?.baseForegroundColor = .label
-                button.configuration?.background.backgroundColor = .clear
-                button.configuration?.image = UIImage(
-                    systemName: "chevron.up"
-                )
-            } else {
-                button.configuration?.baseForegroundColor = .label
-                button.configuration?.background.backgroundColor = .clear
-                button.configuration?.image = UIImage(
-                    systemName: "chevron.down"
-                )
-            }
+        expandButton.snp.makeConstraints { make in
+            make.top.equalTo(overviewLabel.snp.bottom).offset(8)
+            make.bottom.equalToSuperview().inset(8)
+            make.centerX.equalToSuperview()
         }
     }
 

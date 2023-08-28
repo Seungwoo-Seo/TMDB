@@ -5,19 +5,44 @@
 //  Created by 서승우 on 2023/08/19.
 //
 
+import SnapKit
 import UIKit
 
 final class TVDetailViewController: UIViewController {
     // MARK: - View
-    @IBOutlet weak var tableView: UITableView!
+    private lazy var tableView = {
+        let tableView = UITableView()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.tableHeaderView = tableHeaderView
+        tableView.register(
+            TVDetailTableViewOverviewCell.self,
+            forCellReuseIdentifier: TVDetailTableViewOverviewCell.identifier
+        )
+        tableView.register(
+            TVDetailTableViewEpisodeCell.self,
+            forCellReuseIdentifier: TVDetailTableViewEpisodeCell.identifier
+        )
+        return tableView
+    }()
+    private lazy var tableHeaderView = {
+        let header = TVDetailTableHeaderView(frame: .zero)
+        header.unwindButton.addTarget(
+            self,
+            action: #selector(didTapUnwindButton),
+            for: .touchUpInside
+        )
+
+        return header
+    }()
 
     // MARK: - Data
     var tv: TVSeries?
     var tvSeriesDetail: TVSeriesDetail?
-    var tvSeason: TVSeason?
-
-    var episodeList: [Episode] = []
-
+    var tvSeasonDetail: TVSeasonDetail?
 
     // MARK: - Manager
     let networkingManager = NetworkingManager.shared
@@ -26,16 +51,10 @@ final class TVDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureHierarchy()
-        bind()
+        initalAttributes()
+        initalHierarchy()
+        fetchDataForTVDetailScene()
     }
-
-    // MARK: - Bind
-    func bind() {
-        networkingFlow()
-    }
-
-    // MARK: - Event
 
 }
 
@@ -55,7 +74,7 @@ extension TVDetailViewController: UITableViewDataSource {
 
         switch section {
         case .overview: return 1
-        case .content: return episodeList.count
+        case .episode: return tvSeasonDetail?.episodes.count ?? 0
         }
     }
 
@@ -72,12 +91,20 @@ extension TVDetailViewController: UITableViewDataSource {
                 for: indexPath
             ) as? TVDetailTableViewOverviewCell
 
-            cell?.bind(tvSeriesDetail)
+            cell?.bind(tvSeriesDetail: tvSeriesDetail)
 
             return cell ?? UITableViewCell()
 
-        case .content:
-            return UITableViewCell()
+        case .episode:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: TVDetailTableViewEpisodeCell.identifier,
+                for: indexPath
+            ) as? TVDetailTableViewEpisodeCell
+
+            let episode = tvSeasonDetail?.episodes[indexPath.row]
+            cell?.bind(episode: episode, posterURL: tvSeriesDetail?.posterURL)
+
+            return cell ?? UITableViewCell()
         }
     }
 
@@ -85,27 +112,48 @@ extension TVDetailViewController: UITableViewDataSource {
 
 extension TVDetailViewController: UITableViewDelegate {
 
-}
-
-extension TVDetailViewController: UI_ViewControllerConvention {
-
-    func configureHierarchy() {
-        configureTableViews()
-    }
-
-    func configureTableViews() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-
-
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        
     }
 
 }
 
 extension TVDetailViewController {
 
-    func networkingFlow() {
+    @objc
+    func didTapUnwindButton(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+
+}
+
+extension TVDetailViewController {
+
+    func initalAttributes() {
+        view.backgroundColor = .black
+    }
+
+    func initalHierarchy() {
+        view.addSubview(tableView)
+
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+
+        tableHeaderView.snp.makeConstraints { make in
+            make.height.equalTo(250)
+            make.width.equalToSuperview()
+        }
+    }
+
+}
+
+extension TVDetailViewController {
+
+    func fetchDataForTVDetailScene() {
         guard let tv else {return}
         let group = DispatchGroup()
 
@@ -116,19 +164,24 @@ extension TVDetailViewController {
             guard let self else {return}
             self.tvSeriesDetail = tvSeriesDetail
 
-            self.networkingManager.fetchTVSeason(
+            self.networkingManager.fetchTVSeasonDetail(
                 seriesId: tvSeriesDetail.id,
-                seasonNumber: tvSeriesDetail.seasons[0].seasonNumber
-            ) { tvSeason in
-                self.tvSeason = tvSeason
-                self.episodeList = tvSeason.episodes
-
+                seaseonNumber: tvSeriesDetail.seasons[0].seasonNumber
+            ) { tvSeasonDetail in
+                self.tvSeasonDetail = tvSeasonDetail
                 group.leave()
             }
         }
 
         group.notify(queue: .main) { [weak self] in
-            self?.tableView.reloadData()
+            guard let self,
+                  let tvSeriesDetail = self.tvSeriesDetail
+            else {return}
+            self.tableView.reloadData()
+            self.tableHeaderView.bind(
+                tvSeriesDetail: tvSeriesDetail
+            )
+            self.tableHeaderView.layoutIfNeeded()
         }
     }
 

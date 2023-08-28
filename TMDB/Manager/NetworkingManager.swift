@@ -14,10 +14,15 @@ final class NetworkingManager {
     // MARK: - APIs
     private let tvSeriesListAPI = TVSeriesListsAPI()
     private let tvSeriesDetailAPI = TVSeriesDetailAPI()
-    private let tvSeasonAPI = TVSeasonAPI()
+    private let tvSeasonDetailAPI = TVSeasonDetailAPI()
 
     // MARK: - init
     private init() {}
+
+}
+
+// MARK: - TV
+extension NetworkingManager {
 
     // MARK: - TvSeriesListAPI
     func fetchTVSeries(
@@ -60,24 +65,33 @@ final class NetworkingManager {
         }
     }
 
-    // MARK: - TVSeasonAPI
+    // MARK: - TVSeasonDetailAPI
     // 별도 처리사항 없음 -> 바로 데이터 전달
-    func fetchTVSeason(
+    func fetchTVSeasonDetail(
         seriesId: Int,
-        seasonNumber: Int,
-        completion: @escaping (TVSeason) -> ()
+        seaseonNumber: Int,
+        completion: @escaping (TVSeasonDetail) -> ()
     ) {
-        tvSeasonAPI.request(
+        tvSeasonDetailAPI.request(
             endPoint: .시즌(
                 seriesId: seriesId,
-                seasonNumber: seasonNumber
+                seasonNumber: seaseonNumber
             )
-        ) { tvSeason in
-            completion(tvSeason)
+        ) { tvSeasonDetail in
+            completion(tvSeasonDetail)
         }
     }
 
 }
+
+
+
+
+
+
+
+
+
 
 extension NetworkingManager {
 

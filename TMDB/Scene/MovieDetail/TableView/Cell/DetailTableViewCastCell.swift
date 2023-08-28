@@ -6,18 +6,59 @@
 //
 
 import Kingfisher
+import SnapKit
 import UIKit
 
 final class DetailTableViewCastCell: UITableViewCell {
     // MARK: - View
-    @IBOutlet weak var profireImageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var additionalInfoLabel: UILabel!
+    let profireImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        imageView.tintColor = .white
+        imageView.layer.cornerRadius = 8
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    let labelStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 8
+        return stackView
+    }()
+    let nameLabel = {
+        let label = UILabel()
+        label.font = .systemFont(
+            ofSize: 17,
+            weight: .semibold
+        )
+        label.textColor = .white
+        return label
+    }()
+    let additionalInfoLabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .lightText
+        return label
+    }()
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    // MARK: - Init
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Bind
@@ -37,37 +78,37 @@ final class DetailTableViewCastCell: UITableViewCell {
     
 }
 
-// MARK: - UI: awakeFromNib
-extension DetailTableViewCastCell: UI_CellConvention {
+// MARK: - UI
+extension DetailTableViewCastCell {
 
-    func configureHierarchy() {
-        configureCell()
-        configureImageViews()
-        configureLabels()
-    }
-
-    func configureCell() {
+    func initalAttributes() {
         selectionStyle = .none
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 
-    func configureImageViews() {
-        // profireImageView
-        profireImageView.contentMode = .scaleToFill
-        profireImageView.tintColor = .black
-        profireImageView.layer.cornerRadius = 8
-    }
+    func initalHierarchy() {
+        [
+            profireImageView,
+            labelStackView
+        ].forEach { contentView.addSubview($0) }
 
-    func configureLabels() {
-        // nameLabel
-        nameLabel.font = .systemFont(
-            ofSize: 17,
-            weight: .semibold
-        )
-        nameLabel.textColor = .label
+        [
+            nameLabel,
+            additionalInfoLabel
+        ].forEach { labelStackView.addArrangedSubview($0) }
 
-        // additionalInfoLabel
-        additionalInfoLabel.font = .systemFont(ofSize: 13)
-        additionalInfoLabel.textColor = .secondaryLabel
+        profireImageView.snp.makeConstraints { make in
+            make.verticalEdges.leading.equalToSuperview().inset(16)
+            make.height.equalTo(60)
+            make.width.equalTo(profireImageView.snp.height).multipliedBy(0.75)
+        }
+
+        labelStackView.snp.makeConstraints { make in
+            make.leading.equalTo(profireImageView.snp.trailing).offset(16)
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalTo(profireImageView.snp.centerY)
+        }
     }
 
 }

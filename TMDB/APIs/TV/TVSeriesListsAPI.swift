@@ -14,7 +14,7 @@ struct TVSeriesListsAPI {
         endPoint: EndPoint,
         completion: @escaping ([TVSeries]) -> ()
     ) {
-        let url = endPoint.fullPath + "api_key=\(APIKey.tmdb)&language=ko-KR"
+        let url = endPoint.url + "api_key=\(APIKey.tmdb)&language=ko-KR"
 
         AF
             .request(url, method: .get)
@@ -24,6 +24,7 @@ struct TVSeriesListsAPI {
                 case .success(let container):
                     completion(container.tvList)
                 case .failure(let error):
+                    print("TVSeriesListsAPI 에러")
                     print(error.localizedDescription)
                 }
             }

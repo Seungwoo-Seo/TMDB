@@ -5,17 +5,31 @@
 //  Created by 서승우 on 2023/08/19.
 //
 
+import SnapKit
 import UIKit
 
 class TVMainCollectionReusableViewHeader: UICollectionReusableView {
     // MARK: - View
-    @IBOutlet weak var titleLabel: UILabel!
+    let titleLabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(
+            ofSize: 20,
+            weight: .medium
+        )
+        return label
+    }()
 
-    // MARK: - Life Cycle
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    // MARK: - Init
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Bind
@@ -25,19 +39,20 @@ class TVMainCollectionReusableViewHeader: UICollectionReusableView {
 
 }
 
-// MARK: - UI: awakeFromNib
-extension TVMainCollectionReusableViewHeader: UI_ViewConvention {
+// MARK: - UI
+extension TVMainCollectionReusableViewHeader {
 
-    func configureHierarchy() {
-        configureLabels()
+    func initalAttributes() {
+        backgroundColor = .clear
     }
 
-    func configureLabels() {
-        titleLabel.textColor = .label
-        titleLabel.font = .systemFont(
-            ofSize: 20,
-            weight: .medium
-        )
+    func initalHierarchy() {
+        addSubview(titleLabel)
+
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(8)
+            make.horizontalEdges.bottom.equalToSuperview()
+        }
     }
 
 }

@@ -17,7 +17,23 @@ struct TVSeriesDetail: Decodable {
     let overview: String
     let posterPath: String
     let seasons: [TVSeason]
-    let voteAverage: Double
+    let rating: Double
+
+    private let backdropBaseURL = "https://image.tmdb.org/t/p/w1066_and_h600_bestv2"
+    private let posterBaseURL = "https://image.tmdb.org/t/p/original"
+
+    var backdropURL: URL? {
+        guard let backdropPath else {return nil}
+        return URL(string: backdropBaseURL + backdropPath)
+    }
+
+    var posterURL: URL? {
+        return URL(string: posterBaseURL + posterPath)
+    }
+
+    var ratingStringValue: String {
+        return String(format: "%.1f", rating)
+    }
 
     enum CodingKeys: String, CodingKey {
         case backdropPath = "backdrop_path"
@@ -28,6 +44,14 @@ struct TVSeriesDetail: Decodable {
         case overview
         case posterPath = "poster_path"
         case seasons
-        case voteAverage = "vote_average"
+        case rating = "vote_average"
+    }
+}
+
+struct TVSeason: Decodable {
+    let seasonNumber: Int
+
+    enum CodingKeys: String, CodingKey {
+        case seasonNumber = "season_number"
     }
 }

@@ -9,5 +9,5 @@ import Foundation
 
 enum TVDetailTableViewSectionKind: Int, CaseIterable {
     case overview
-    case content
+    case episode
 }

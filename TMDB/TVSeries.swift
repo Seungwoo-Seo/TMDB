@@ -22,7 +22,6 @@ struct TVSeriesContainer: Decodable {
 struct TVSeries: Decodable, Hashable {
     let id: Int
     let posterPath: String?
-    let rating: Double
 
     private let imageBaseURL = "https://image.tmdb.org/t/p/original"
 
@@ -31,13 +30,8 @@ struct TVSeries: Decodable, Hashable {
         return URL(string: imageBaseURL + posterPath)
     }
 
-    var ratingStringValue: String {
-        return String(format: "%.1f", rating)
-    }
-
     enum CodingKeys: String, CodingKey {
         case id
         case posterPath = "poster_path"
-        case rating = "vote_average"
     }
 }

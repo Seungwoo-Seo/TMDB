@@ -5,13 +5,49 @@
 //  Created by 서승우 on 2023/08/15.
 //
 
+import SnapKit
 import UIKit
 
 final class MovieMainViewController: UIViewController {
     // MARK: - View
-    @IBOutlet weak var leftBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var rightBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var tableView: UITableView!
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "list.triangle"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapLeftBarButtonItem)
+        )
+        barButtonItem.tintColor = .white
+
+        return barButtonItem
+    }()
+
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "magnifyingglass"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapLeftBarButtonItem)
+        )
+        barButtonItem.tintColor = .white
+
+        return barButtonItem
+    }()
+
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.dataSource = self
+        tableView.prefetchDataSource = self
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.register(
+            MainTableViewCell.self,
+            forCellReuseIdentifier: MainTableViewCell.identifier
+        )
+
+        return tableView
+    }()
 
     // MARK: - Data
     private var movieList: [Movie] = [] {
@@ -22,34 +58,24 @@ final class MovieMainViewController: UIViewController {
     private var currentPage = 1
 
     // MARK: - Manager
-    private let shared = NetworkingManager.shared
+    private let networkManager = NetworkingManager.shared
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureHierarchy()
+        initalAttributes()
+        initalHierarchy()
         bind()
     }
 
     // MARK: - Bind
     func bind() {
-        shared.responseTrendingAPI(
+        networkManager.responseTrendingAPI(
             page: currentPage
         ) { [weak self] (movieList) in
             self?.movieList = movieList
         }
-    }
-
-    // MARK: - Event
-    @IBAction func didTapLeftBarButtonItem(
-        _ sender: UIBarButtonItem
-    ) {
-    }
-
-    @IBAction func didTapRightBarButtonItem(
-        _ sender: UIBarButtonItem
-    ) {
     }
 
 }
@@ -76,8 +102,8 @@ extension MovieMainViewController: UITableViewDataSource {
         cell?.pushButtontag = indexPath.row
         cell?.delegate = self
 
-        let trending = movieList[indexPath.row]
-        cell?.bind(trending)
+        let movie = movieList[indexPath.row]
+        cell?.bind(to: movie)
 
         return cell ?? UITableViewCell()
     }
@@ -94,7 +120,7 @@ extension MovieMainViewController: UITableViewDataSourcePrefetching {
         for indexPath in indexPaths {
             if indexPath.row == movieList.count - 1 && currentPage < 500 {
                 currentPage += 1
-                shared.responseTrendingAPI(
+                networkManager.responseTrendingAPI(
                     page: currentPage
                 ) { [weak self] (movieList) in
                     self?.movieList += movieList
@@ -109,69 +135,55 @@ extension MovieMainViewController: UITableViewDataSourcePrefetching {
 extension MovieMainViewController: MainTableViewCellDelegate {
     
     func didTapPushButton(_ tag: Int) {
-        pushToDetailViewController(with: tag)
-    }
-
-}
-
-// MARK: - UI: viewDidLoad
-extension MovieMainViewController: UI_ViewControllerConvention {
-
-    func configureHierarchy() {
-        configureNavigationBar()
-        configureTableViews()
-    }
-
-    func configureNavigationBar() {
-        navigationController?.navigationBar.tintColor = .black
-        navigationItem.backButtonTitle = ""
-
-        // leftBarButtonItem
-        leftBarButtonItem.title = ""
-        leftBarButtonItem.image = UIImage(
-            systemName: "list.triangle"
-        )
-
-        // rightBarButtonItem
-        rightBarButtonItem.title = ""
-        rightBarButtonItem.image = UIImage(
-            systemName: "magnifyingglass"
-        )
-    }
-
-    func configureTableViews() {
-        tableView.dataSource = self
-        tableView.prefetchDataSource = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.separatorStyle = .none
-
-        let nib = UINib(
-            nibName: MainTableViewCell.identifier,
-            bundle: nil
-        )
-        tableView.register(
-            nib,
-            forCellReuseIdentifier: MainTableViewCell.identifier
-        )
-    }
-
-}
-
-// MARK: - 화면 전환
-private extension MovieMainViewController {
-
-    func pushToDetailViewController(with tag: Int) {
-        let vc = storyboard?.instantiateViewController(
-            withIdentifier: MovieDetailViewController.identifier
-        ) as! MovieDetailViewController
+        let vc = MovieDetailViewController()
 
         let treding = movieList[tag]
         vc.trending = treding
 
-        navigationController?.pushViewController(
-            vc,
-            animated: true
+        transition(
+            viewController: vc,
+            style: .push
         )
+    }
+
+}
+
+// MARK: - UI
+extension MovieMainViewController {
+    /// 초기에 추가적인 SubViews 속성 설정
+    func initalAttributes() {
+        navigationController?.navigationBar.tintColor = .black
+        navigationItem.backButtonTitle = ""
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+
+        view.backgroundColor = .black
+    }
+
+    /// View를 추가하고 초기 레이아웃을 설정
+    func initalHierarchy() {
+        view.addSubview(tableView)
+
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+
+}
+
+// MARK: - Event
+extension MovieMainViewController {
+
+    @objc
+    func didTapLeftBarButtonItem(
+        _ sender: UIBarButtonItem
+    ) {
+    }
+
+    @objc
+    func didTapRightBarButtonItem(
+        _ sender: UIBarButtonItem
+    ) {
     }
 
 }
