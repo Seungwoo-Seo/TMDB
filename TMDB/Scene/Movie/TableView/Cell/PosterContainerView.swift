@@ -20,6 +20,7 @@ final class PosterContainerView: UIView {
             .layerMaxXMinYCorner
         ]
         imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
         return imageView
     }()
     let clipButton: UIButton = {
@@ -89,6 +90,7 @@ private extension PosterContainerView {
         let inset: CGFloat = 16
         posterImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+//            make.height.equalTo(posterImageView.snp.width)
         }
 
         clipButton.snp.makeConstraints { make in

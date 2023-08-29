@@ -97,6 +97,7 @@ extension TVDetailTableViewEpisodeCell {
     func initalAttributes() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+        selectionStyle = .none
     }
 
     func initalHierarchy() {

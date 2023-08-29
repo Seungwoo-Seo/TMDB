@@ -99,12 +99,14 @@ final class MainTableViewCell: UITableViewCell {
     func bind(to movie: Movie) {
         releaseDataLabel.text = movie.releaseDate
         genreLabel.text = movie.genresStringValue
+        posterContainerView.posterImageView.image = UIImage(systemName: "heart")
         posterContainerView.posterImageView.kf.setImage(
             with: movie.posterURL,
             placeholder: UIImage(
                 systemName: "rectangle.on.rectangle"
             )
         )
+
         posterContainerView.ratingLabel.text = movie.ratingStringValue
         infoContainerView.titleLabel.text = movie.title
         infoContainerView.overviewLabel.text = movie.overview
@@ -135,8 +137,9 @@ extension MainTableViewCell {
         // 여기서 먼저 추가하는게 이미지가 침범하는 것과 뭔 상관?
         // 버튼도 아니고
         [
-            infoContainerView,
-            posterContainerView
+            posterContainerView,
+            infoContainerView
+
         ].forEach { containerView.addSubview($0) }
 
         let margin: CGFloat = 20

@@ -36,8 +36,16 @@ final class TVDetailTableViewOverviewCell: UITableViewCell {
         return label
     }()
     let contentSegmentedControl = {
-        let control = UISegmentedControl()
-        
+        let control = UISegmentedControl(
+            items: [
+                "회차",
+                "함께 시청된 콘텐츠",
+                "예고편 및 다른 영상"
+            ]
+        )
+        control.selectedSegmentIndex = 0
+        control.apportionsSegmentWidthsByContent = true
+
         return control
     }()
 
@@ -59,7 +67,6 @@ final class TVDetailTableViewOverviewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     func bind(tvSeriesDetail: TVSeriesDetail?) {
         guard let tvSeriesDetail else {return}
         titleLabel.text = tvSeriesDetail.name
@@ -76,6 +83,7 @@ extension TVDetailTableViewOverviewCell {
     func initalAttributes() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+        selectionStyle = .none
     }
 
     func initalHierarhcy() {
