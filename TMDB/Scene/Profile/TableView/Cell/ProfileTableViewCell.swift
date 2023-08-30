@@ -105,15 +105,15 @@ final class ProfileTableViewCell: UITableViewCell {
         stackView.spacing = 8
         return stackView
     }()
-    private let valueLabel = {
-        let label = UILabel()
-        label.textColor = .lightText
-        label.font = .systemFont(
-            ofSize: 15,
-            weight: .medium
-        )
-        return label
-    }()
+    let valueLabel = {
+    let label = UILabel()
+    label.textColor = .lightText
+    label.font = .systemFont(
+        ofSize: 15,
+        weight: .medium
+    )
+    return label
+}()
     private let accessoryImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .lightGray
@@ -183,6 +183,7 @@ private extension ProfileTableViewCell {
     func initalAttirbutes() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+        selectionStyle = .none
     }
 
     func initalHierarhcy() {

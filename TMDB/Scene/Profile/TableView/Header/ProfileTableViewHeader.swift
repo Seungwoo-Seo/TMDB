@@ -22,20 +22,27 @@ final class ProfileTableViewHeader: UIView {
     private let profileImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
-        imageView.image = UIImage(systemName: "person.circle.fill")
+        imageView.image = UIImage(
+            systemName: "person.circle.fill"
+        )
         imageView.tintColor = .white
         return imageView
     }()
     private let avatarImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
-        imageView.image = UIImage(systemName: "person")
+        imageView.image = UIImage(
+            systemName: "person.circle.fill"
+        )
         return imageView
     }()
     private let updateButton = {
-        var config = UIButton.Configuration.plain()
-        config.title = "사진 또는 아바타 수정"
-        let button = UIButton(configuration: config)
+        let button = UIButton()
+        button.setTitle("사진 또는 아바타 수정", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.font = .systemFont(
+            ofSize: 13, weight: .regular
+        )
 
         return button
     }()

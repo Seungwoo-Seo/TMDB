@@ -9,8 +9,27 @@ import SnapKit
 import UIKit
 
 final class ProfileViewController: UIViewController {
-
-    private lazy var tableView = {
+    // MARK: - View
+    private lazy var leftBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(
+            title: "취소",
+            style: .plain,
+            target: self,
+            action: #selector(didTapLeftBarButtomItem)
+        )
+        return barButtonItem
+    }()
+    private lazy var rightBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(
+            title: "완료",
+            style: .plain,
+            target: self,
+            action: #selector(didTapRightBarButtomItem)
+        )
+        barButtonItem.tintColor = .systemBlue
+        return barButtonItem
+    }()
+    lazy var tableView = {
         let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -70,15 +89,48 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UITableViewDelegate {
 
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        let kind = ProfileTableViewCellKind.allCases[indexPath.row]
+
+        if kind == .프로페셔널_계정으로_전환 || kind == .개인정보_설정 {
+            presentAlert()
+            return
+        }
+
+        let vc = ProfileEditViewController()
+        vc.bind(to: kind)
+        vc.completion = { result in
+            let cell = self.tableView.cellForRow(
+                at: indexPath
+            ) as? ProfileTableViewCell
+
+            cell?.valueLabel.textColor = .white
+            cell?.valueLabel.text = result
+        }
+        navigationController?.pushViewController(
+            vc,
+            animated: true
+        )
+    }
+
 }
 
 private extension ProfileViewController {
 
     func initalAttirbutes() {
         view.backgroundColor = .black
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.topItem?.title = "프로필 편집"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationItem.backButtonTitle = ""
     }
 
     func initalHierarhcy() {
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
@@ -88,6 +140,41 @@ private extension ProfileViewController {
         profileTableViewHeader.snp.makeConstraints { make in
             make.width.equalToSuperview()
         }
+    }
+
+}
+
+private extension ProfileViewController {
+
+    @objc
+    func didTapLeftBarButtomItem(_ sender: UIBarButtonItem) {
+        
+    }
+
+    @objc
+    func didTapRightBarButtomItem(_ sender: UIBarButtonItem) {
+
+    }
+
+}
+
+private extension ProfileViewController {
+
+    func presentAlert() {
+        let alert = UIAlertController(
+            title: "준비중~",
+            message: nil,
+            preferredStyle: .alert
+        )
+
+        let confirm = UIAlertAction(
+            title: "확인",
+            style: .cancel
+        )
+
+        alert.addAction(confirm)
+
+        present(alert, animated: true)
     }
 
 }

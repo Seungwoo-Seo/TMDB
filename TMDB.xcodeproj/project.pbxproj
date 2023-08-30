@@ -14,6 +14,9 @@
 		5756B5A12A9DEE9F001A83D9 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756B5A02A9DEE9F001A83D9 /* ProfileViewController.swift */; };
 		5756B5A32A9DF14F001A83D9 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756B5A22A9DF14F001A83D9 /* ProfileTableViewCell.swift */; };
 		5756B5A72A9E5C01001A83D9 /* ProfileTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756B5A62A9E5C01001A83D9 /* ProfileTableViewHeader.swift */; };
+		5756B5B02A9F527F001A83D9 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5756B5AF2A9F527F001A83D9 /* Storyboard.storyboard */; };
+		5756B5B32A9F5551001A83D9 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756B5B22A9F5551001A83D9 /* ProfileEditViewController.swift */; };
+		5756B5B62A9F8FAE001A83D9 /* TextFieldEffects in Frameworks */ = {isa = PBXBuildFile; productRef = 5756B5B52A9F8FAE001A83D9 /* TextFieldEffects */; };
 		57571EE12A8E0EC6005874D2 /* TVMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57571EE02A8E0EC6005874D2 /* TVMainViewController.swift */; };
 		579FF4112A9CDF2E0027B8E2 /* MovieDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579FF4102A9CDF2E0027B8E2 /* MovieDetailTableViewHeader.swift */; };
 		579FF4132A9D07030027B8E2 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579FF4122A9D07030027B8E2 /* TabBarViewController.swift */; };
@@ -68,6 +71,8 @@
 		5756B5A02A9DEE9F001A83D9 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5756B5A22A9DF14F001A83D9 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		5756B5A62A9E5C01001A83D9 /* ProfileTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewHeader.swift; sourceTree = "<group>"; };
+		5756B5AF2A9F527F001A83D9 /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		5756B5B22A9F5551001A83D9 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		57571EE02A8E0EC6005874D2 /* TVMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVMainViewController.swift; sourceTree = "<group>"; };
 		579FF4102A9CDF2E0027B8E2 /* MovieDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailTableViewHeader.swift; sourceTree = "<group>"; };
 		579FF4122A9D07030027B8E2 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				57531FD42A9A075C00AFFC4F /* SnapKit in Frameworks */,
+				5756B5B62A9F8FAE001A83D9 /* TextFieldEffects in Frameworks */,
 				57DE2C592A8BC39C0032C4CA /* Kingfisher in Frameworks */,
 				57DE2C502A8B990F0032C4CA /* Alamofire in Frameworks */,
 			);
@@ -169,6 +175,14 @@
 				5756B5A62A9E5C01001A83D9 /* ProfileTableViewHeader.swift */,
 			);
 			path = Header;
+			sourceTree = "<group>";
+		};
+		5756B5B12A9F5531001A83D9 /* ProfileEdit */ = {
+			isa = PBXGroup;
+			children = (
+				5756B5B22A9F5551001A83D9 /* ProfileEditViewController.swift */,
+			);
+			path = ProfileEdit;
 			sourceTree = "<group>";
 		};
 		57571EC32A8D1CAE005874D2 /* TV */ = {
@@ -266,6 +280,7 @@
 				57DE2C352A8B7DFC0032C4CA /* Extension+ */,
 				57DE2C252A8B7DB70032C4CA /* Assets.xcassets */,
 				57DE2C2A2A8B7DB70032C4CA /* Info.plist */,
+				5756B5AF2A9F527F001A83D9 /* Storyboard.storyboard */,
 			);
 			path = TMDB;
 			sourceTree = "<group>";
@@ -288,6 +303,7 @@
 				57571EC32A8D1CAE005874D2 /* TV */,
 				57571EC42A8D1CCD005874D2 /* TVDetail */,
 				5756B59F2A9DEE85001A83D9 /* Profile */,
+				5756B5B12A9F5531001A83D9 /* ProfileEdit */,
 				579FF4122A9D07030027B8E2 /* TabBarViewController.swift */,
 			);
 			path = Scene;
@@ -518,6 +534,7 @@
 				57DE2C4F2A8B990F0032C4CA /* Alamofire */,
 				57DE2C582A8BC39C0032C4CA /* Kingfisher */,
 				57531FD32A9A075C00AFFC4F /* SnapKit */,
+				5756B5B52A9F8FAE001A83D9 /* TextFieldEffects */,
 			);
 			productName = TMDB;
 			productReference = 57DE2C192A8B7DB50032C4CA /* TMDB.app */;
@@ -551,6 +568,7 @@
 				57DE2C4E2A8B990F0032C4CA /* XCRemoteSwiftPackageReference "Alamofire" */,
 				57DE2C572A8BC39C0032C4CA /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				57531FD22A9A075C00AFFC4F /* XCRemoteSwiftPackageReference "SnapKit" */,
+				5756B5B42A9F8FAE001A83D9 /* XCRemoteSwiftPackageReference "TextFieldEffects" */,
 			);
 			productRefGroup = 57DE2C1A2A8B7DB50032C4CA /* Products */;
 			projectDirPath = "";
@@ -570,6 +588,7 @@
 				57DE2C292A8B7DB70032C4CA /* LaunchScreen.storyboard in Resources */,
 				5756B59C2A9DD45F001A83D9 /* Test.storyboard in Resources */,
 				57DE2C262A8B7DB70032C4CA /* Assets.xcassets in Resources */,
+				5756B5B02A9F527F001A83D9 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,6 +619,7 @@
 				57DE2C422A8B7F9C0032C4CA /* MainTableViewCell.swift in Sources */,
 				57DE2C212A8B7DB50032C4CA /* MovieMainViewController.swift in Sources */,
 				57ABA5B62A93D666003301B3 /* TVDetailTableViewSectionKind.swift in Sources */,
+				5756B5B32A9F5551001A83D9 /* ProfileEditViewController.swift in Sources */,
 				57EA00B82A908087005BE713 /* TVMainCollectionReusableViewHeader.swift in Sources */,
 				57EA00BC2A9083B2005BE713 /* TVMainCollectionViewRegister.swift in Sources */,
 				57DE2C1D2A8B7DB50032C4CA /* AppDelegate.swift in Sources */,
@@ -848,6 +868,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		5756B5B42A9F8FAE001A83D9 /* XCRemoteSwiftPackageReference "TextFieldEffects" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/raulriera/TextFieldEffects.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		57DE2C4E2A8B990F0032C4CA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -871,6 +899,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 57531FD22A9A075C00AFFC4F /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		5756B5B52A9F8FAE001A83D9 /* TextFieldEffects */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5756B5B42A9F8FAE001A83D9 /* XCRemoteSwiftPackageReference "TextFieldEffects" */;
+			productName = TextFieldEffects;
 		};
 		57DE2C4F2A8B990F0032C4CA /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
